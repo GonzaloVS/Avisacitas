@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".splash.SplashActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <!-- Logo central o imagen -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_launcher_foreground"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:layout_above="@id/progress_bar" />
+
+        <!-- Barra de progreso -->
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:layout_centerInParent="true" />
+
+        <!-- Texto que muestra el nombre del archivo que se está cargando -->
+        <TextView
+            android:id="@+id/loading_file_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cargando archivo: "
+            android:textSize="16sp"
+            android:textColor="@android:color/black"
+            android:layout_below="@id/progress_bar"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" />
+
+        <!-- Texto que muestra el porcentaje cargado -->
+        <TextView
+            android:id="@+id/progress_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cargando 0%"
+            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:layout_below="@id/loading_file_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
