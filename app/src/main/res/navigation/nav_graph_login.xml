@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/termsAndConditionsFragment">
+
+    <fragment
+        android:id="@+id/termsAndConditionsFragment"
+        android:name="com.gvs.avisacitas.login.ui.login.termsAndConditions.TermsAndConditionsFragment"
+        android:label="Terms and Conditions">
+
+        <!-- Definir la acción de navegación -->
+        <action
+            android:id="@+id/action_termsAndConditionsFragment_to_googleSignInFragment"
+            app:destination="@id/googleSignInFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/googleSignInFragment"
+        android:name="com.gvs.avisacitas.login.ui.login.googleAccountSignIn.GoogleSignInFragment"
+        android:label="Google Sign-In" />
+</navigation>

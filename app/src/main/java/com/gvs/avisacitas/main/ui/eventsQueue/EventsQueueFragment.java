@@ -1,4 +1,4 @@
-package com.gvs.avisacitas.main.ui.dashboard;
+package com.gvs.avisacitas.main.ui.eventsQueue;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,25 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.gvs.avisacitas.databinding.FragmentDashboardBinding;
+import com.gvs.avisacitas.databinding.FragmentEventsQueueBinding;
+import com.gvs.avisacitas.main.SharedViewModel;
 
 public class EventsQueueFragment extends Fragment {
 
-	private FragmentDashboardBinding binding;
+	private FragmentEventsQueueBinding binding;
+	private SharedViewModel sharedViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 	                         ViewGroup container, Bundle savedInstanceState) {
 		EventsQueueViewModel eventsQueueViewModel =
 				new ViewModelProvider(this).get(EventsQueueViewModel.class);
 
-		binding = FragmentDashboardBinding.inflate(inflater, container, false);
+		binding = FragmentEventsQueueBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
 
-		final TextView textView = binding.textDashboard;
-		eventsQueueViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+		// Obtener el mismo ViewModel compartido con la Activity
+		sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
 		return root;
 	}
 

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -12,10 +14,14 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.gvs.avisacitas.R;
 import com.gvs.avisacitas.databinding.ActivityMainBinding;
+import com.gvs.avisacitas.main.ui.eventsQueue.EventsQueueViewModel;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
 	private ActivityMainBinding binding;
+	private SharedViewModel sharedViewModel;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +30,21 @@ public class MainActivity extends AppCompatActivity {
 		binding = ActivityMainBinding.inflate(getLayoutInflater());
 		setContentView(binding.getRoot());
 
-		BottomNavigationView navView = findViewById(R.id.nav_view);
-		// Passing each menu ID as a set of Ids because each
-		// menu should be considered as top level destinations.
-		AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-				R.id.navigation_home, R.id.events_queue, R.id.settings)
-				.build();
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 		NavigationUI.setupWithNavController(binding.navView, navController);
+
+		// Obtener el ViewModel asociado a esta Activity
+		sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
+
+		// Observar cambios en la lista de eventos
+		sharedViewModel.getEventsList().observe(this, new Observer<List<String>>() {
+			@Override
+			public void onChanged(List<String> events) {
+				// Actualizar la interfaz de usuario con la lista de eventos
+				// Aquí puedes actualizar un TextView, RecyclerView, etc.
+				//updateUIWithEvents(events);
+			}
+		});
 	}
 
 }

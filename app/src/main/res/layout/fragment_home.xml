@@ -6,17 +6,118 @@
     android:layout_height="match_parent"
     tools:context=".main.ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+
+    <ScrollView
+        android:id="@+id/sv_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:fadeScrollbars="false"
+        android:scrollbars="vertical">
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/_10sdp"
+            android:paddingRight="@dimen/_10sdp">
+
+            <!-- Imagen de la cuenta -->
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imageAccount"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/empty"
+                android:src="@drawable/ic_launcher_foreground"
+                app:riv_oval="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+
+            <TextView
+                android:id="@+id/textAccountMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="@string/examplemail_example_com"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnCloseSession"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:backgroundTint="@color/dangerRed"
+                android:contentDescription="@string/empty"
+                android:enabled="true"
+                android:paddingHorizontal="6dp"
+                android:text="@string/close_session"
+                android:textSize="@dimen/_8ssp"
+                android:textStyle="bold" />
+
+           <TextView
+                android:id="@+id/textCompanyNameLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/company_name"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editCompanyName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/company_name_input"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textMessageLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/message_custom_text"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editMessageText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:hint="@string/message_custom_text_input"
+                android:textSize="16sp" />
+
+
+            <ImageView
+                android:id="@+id/iconAccesibilityStatus"
+                android:layout_width="@dimen/_96sdp"
+                android:layout_height="@dimen/_96sdp"
+                android:layout_marginTop="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_error"
+                app:tint="@color/warning"/>
+
+            <TextView
+                android:id="@+id/textAccesibilityStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+                android:text="@string/accessibility_service_off"
+                android:textSize="24sp"
+                />
+        </LinearLayout>
+
+
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

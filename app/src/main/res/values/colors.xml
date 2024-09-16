@@ -7,4 +7,16 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <!--     D     -->
+    <color name="dangerRed">#ff6969</color>
+    <color name="default_disabled_color">#AAA</color>
+
+
+    <!--     L     -->
+    <color name="link_blue">#00aaff</color>
+
+    <!--     W     -->
+    <color name="warning">#EED212</color>
 </resources>

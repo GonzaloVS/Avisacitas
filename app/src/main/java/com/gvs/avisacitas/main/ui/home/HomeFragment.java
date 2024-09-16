@@ -11,10 +11,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.gvs.avisacitas.databinding.FragmentHomeBinding;
+import com.gvs.avisacitas.main.SharedViewModel;
 
 public class HomeFragment extends Fragment {
 
 	private FragmentHomeBinding binding;
+	private SharedViewModel sharedViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 	                         ViewGroup container, Bundle savedInstanceState) {
@@ -24,8 +26,9 @@ public class HomeFragment extends Fragment {
 		binding = FragmentHomeBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
 
-		final TextView textView = binding.textHome;
-		homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+		// Obtener el mismo ViewModel compartido con la Activity
+		sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
 		return root;
 	}
 

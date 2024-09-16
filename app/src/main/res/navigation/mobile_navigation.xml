@@ -13,13 +13,13 @@
 
     <fragment
         android:id="@+id/events_queue"
-        android:name="com.gvs.avisacitas.main.ui.dashboard.EventsQueueFragment"
+        android:name="com.gvs.avisacitas.main.ui.eventsQueue.EventsQueueFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_events_queue" />
 
     <fragment
         android:id="@+id/settings"
-        android:name="com.gvs.avisacitas.main.ui.notifications.SettingsFragment"
+        android:name="com.gvs.avisacitas.main.ui.settings.SettingsFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_settings" />
 </navigation>

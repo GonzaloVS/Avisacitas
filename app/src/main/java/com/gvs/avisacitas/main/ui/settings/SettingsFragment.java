@@ -1,4 +1,4 @@
-package com.gvs.avisacitas.main.ui.notifications;
+package com.gvs.avisacitas.main.ui.settings;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.gvs.avisacitas.databinding.FragmentNotificationsBinding;
+import com.gvs.avisacitas.databinding.FragmentSettingsBinding;
+import com.gvs.avisacitas.main.SharedViewModel;
 
 public class SettingsFragment extends Fragment {
 
-	private FragmentNotificationsBinding binding;
+	private FragmentSettingsBinding binding;
+	private SharedViewModel sharedViewModel;
 
 	public View onCreateView(@NonNull LayoutInflater inflater,
 	                         ViewGroup container, Bundle savedInstanceState) {
 		SettingsViewModel settingsViewModel =
 				new ViewModelProvider(this).get(SettingsViewModel.class);
 
-		binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+		binding = FragmentSettingsBinding.inflate(inflater, container, false);
 		View root = binding.getRoot();
+
+		// Obtener el mismo ViewModel compartido con la Activity
+		sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
 		final TextView textView = binding.textNotifications;
 		settingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
 		return root;
 	}
 

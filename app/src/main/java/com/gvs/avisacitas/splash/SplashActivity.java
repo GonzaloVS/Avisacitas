@@ -9,7 +9,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.gvs.avisacitas.R;
+import com.gvs.avisacitas.login.ui.login.LoginActivity;
 import com.gvs.avisacitas.main.MainActivity;
+import com.gvs.avisacitas.model.accounts.Account;
+import com.gvs.avisacitas.model.calendar.CalendarHelper;
+import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
+import com.gvs.avisacitas.utils.error.LogHelper;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -20,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
 	private int progressStatus = 0;
 
 	// Lista simulada de archivos que se están cargando
-	private String[] filesToLoad = {
+	private final String[] filesToLoad = {
 			"android_config_0123", "user_data_cache_1024", "system_logcat_2345", "device_info_3125", "backup_Cloud_4120", "android_ui_0321", "kernel_log_5012", "apk_download_1934", "system_resource_0567", "temp_file_cache_8763", "android_os_update_3419", "dalvik_cache_5893", "battery_stats_9182", "wifi_scan_results_4412",
 			"camera_config_2140", "app_permissions_1284", "error_report_0239", "secure_boot_1395", "device_health_6271", "android_notification_9382", "logcat_report_3024", "settings_backup_4143", "gps_coordinates_0837", "network_policy_8293", "developer_mode_2718", "user_preferences_4948", "system_ui_tuner_0321",
 			"cpu_usage_stats_0982", "fingerprint_scanner_log_9014", "trusted_device_data_3274", "secure_element_log_5634", "volume_control_log_8729", "android_activity_log_2938", "media_volume_settings_4103", "app_cache_clear_7318", "file_observer_report_1302", "android_app_drawer_4259", "input_methods_log_9173",
@@ -44,11 +49,13 @@ public class SplashActivity extends AppCompatActivity {
 		progressText = findViewById(R.id.progress_text);
 		loadingFileText = findViewById(R.id.loading_file_text);
 
+		AvisacitasSQLiteOpenHelper avisacitasSQLiteOpenHelper = new AvisacitasSQLiteOpenHelper(this);
+
 		// Simular la carga de archivos
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for (int i = 0; i < filesToLoad.length; i++) {
+				for (int i = 0; i <  filesToLoad.length; i++) {
 					final String currentFile = filesToLoad[i]; // Obtener el archivo actual
 
 					// Simular el tiempo de carga de cada archivo
@@ -66,16 +73,28 @@ public class SplashActivity extends AppCompatActivity {
 						@Override
 						public void run() {
 							// Actualizar el nombre del archivo que se está cargando
-							loadingFileText.setText("Cargando: " + currentFile);
+							loadingFileText.setText(String.format("%s%s", getString(R.string.loading), currentFile));
 							// Actualizar el progreso
 							progressBar.setProgress(progressStatus);
-							progressText.setText("Cargando " + progressStatus + "%");
+							progressText.setText(getString(R.string.loading)  + progressStatus + "%");
 						}
 					});
 				}
 
+
+
+					avisacitasSQLiteOpenHelper.updatePanicBtn(true);
+
+					Account hasAccount = avisacitasSQLiteOpenHelper.getActiveAccountWCB();
+					if (hasAccount ==null) {
+
+					}
+
+					//CalendarHelper.insertOrUpdateAllCalendarEvents(getApplicationContext());
+
+
 				// Una vez que todos los archivos han sido cargados, iniciar la actividad principal
-				Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 				startActivity(intent);
 				finish(); // Finalizar SplashActivity
 			}
