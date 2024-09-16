@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_login"
     app:startDestination="@id/termsAndConditionsFragment">
 
     <fragment
         android:id="@+id/termsAndConditionsFragment"
         android:name="com.gvs.avisacitas.login.ui.login.termsAndConditions.TermsAndConditionsFragment"
-        android:label="Terms and Conditions">
-
-        <!-- Definir la acción de navegación -->
+        android:label="Terms and Conditions"
+        tools:layout="@layout/fragment_terms_and_conditions">
         <action
             android:id="@+id/action_termsAndConditionsFragment_to_googleSignInFragment"
             app:destination="@id/googleSignInFragment" />
@@ -17,5 +18,6 @@
     <fragment
         android:id="@+id/googleSignInFragment"
         android:name="com.gvs.avisacitas.login.ui.login.googleAccountSignIn.GoogleSignInFragment"
-        android:label="Google Sign-In" />
+        android:label="Google Sign-In"
+        tools:layout="@layout/fragment_google_sign_in"/>
 </navigation>

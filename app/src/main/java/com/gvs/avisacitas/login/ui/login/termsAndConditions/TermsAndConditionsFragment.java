@@ -25,9 +25,9 @@ public class TermsAndConditionsFragment extends Fragment {
 		// Required empty public constructor
 	}
 
-	public static TermsAndConditionsFragment newInstance() {
-		return new TermsAndConditionsFragment();
-	}
+//	//public static TermsAndConditionsFragment newInstance() {
+//		return new TermsAndConditionsFragment();
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

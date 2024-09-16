@@ -1,7 +1,6 @@
 package com.gvs.avisacitas.login.ui.login;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -19,6 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 		binding = ActivityLoginBinding.inflate(getLayoutInflater());
 		setContentView(binding.getRoot());
 
-		Log.d("LoginActivity", "Activity Created");
+		//NavController navController = Navigation.findNavController(this, R.id.nav_host_login_fragment); // Ajusta el ID si es necesario
+
 	}
 }
