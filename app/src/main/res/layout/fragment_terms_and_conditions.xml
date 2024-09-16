@@ -11,30 +11,92 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/_30sdp"
+        android:translationY="@dimen/_minus50sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Content Here -->
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageAccountList"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_launcher_foreground"
+            app:riv_oval="true" />
+
+ <!--       <TextView
+            android:id="@+id/atribution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-30dp"
+            android:text="@string/designed_by_Freepik"
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/_6sdp" />-->
+
+        <TextView
+            android:id="@+id/textpr_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:text="@string/welcome"
+            android:textAlignment="center"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textpr_subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="@string/app_description"
+            android:textAlignment="center"
+            android:textSize="@dimen/_12ssp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearlayoutpr_checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/_30sdp"
+
+        app:layout_constraintTop_toBottomOf="@+id/ll_scrollcontainer">
 
         <CheckBox
             android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/_20sdp"
             android:layout_height="wrap_content"
-            android:buttonTint="@color/black" />
+            android:buttonTint="@color/teal_700" />
 
         <TextView
             android:id="@+id/text_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="agree_checkbox" />
+            android:layout_marginLeft="@dimen/_6sdp"
+            android:clickable="true"
+            android:gravity="left"
+            android:text="@string/agree_checkbox" />
 
-        <Button
-            android:id="@+id/accept_button"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:backgroundTint="@color/teal_700"
-            android:text="@string/accept"
-            android:textColor="@color/white" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/pr_continue_btn"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginHorizontal="@dimen/_30sdp"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/teal_700"
+        android:text="@string/action_sign_in"
+        android:textColor="@color/white"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

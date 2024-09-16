@@ -7,6 +7,9 @@
     <string name="accessibility_service_label">Avisacitas Accessibility Service</string>
     <string name="accessibility_service_must_toast">"You must enable the accessibility service"</string>
     <string name="accessibility_service_off">"Accessibility Service not enabled"</string>
+    <string name="agree_checkbox">I agree to the Terms of Service and Privacy Policy.</string>
+    <string name="app_description">Use Avisacitas app to automatically send Google Calendar appointment reminders via WhatsApp and SMS for free</string>
+
 
     <!--     C     -->
     <string name="cancel">Cancel</string>
@@ -34,6 +37,10 @@
 
     <!--     P     -->
     <string name="play_pause">Play/Pause</string>
+
+    <!--     S     -->
+    <string name="sign_up_free">Sign Up for Free</string>
+    <string name="subtitle_account">To be able to send reminders for your appointments, we need access to the Google account of the calendar you want to sync.</string>
 
     <!--     T     -->
     <string name="title_activity_main">MainActivity</string>
