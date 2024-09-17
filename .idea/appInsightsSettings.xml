@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.gvs.avisacitas" />
+                  <option name="mobileSdkAppId" value="1:1001618390215:android:8b292a0467a46f5d3a12e2" />
+                  <option name="projectId" value="avisa-citas" />
+                  <option name="projectNumber" value="1001618390215" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

@@ -3,8 +3,13 @@ package com.gvs.avisacitas.login.ui.login;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
+import com.gvs.avisacitas.R;
 import com.gvs.avisacitas.databinding.ActivityLoginBinding;
+import com.gvs.avisacitas.utils.error.LogHelper;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -17,8 +22,6 @@ public class LoginActivity extends AppCompatActivity {
 		// Inflar el diseño utilizando View Binding
 		binding = ActivityLoginBinding.inflate(getLayoutInflater());
 		setContentView(binding.getRoot());
-
-		//NavController navController = Navigation.findNavController(this, R.id.nav_host_login_fragment); // Ajusta el ID si es necesario
 
 	}
 }

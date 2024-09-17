@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Avisacitas"
 include(":app")
- 

@@ -17,8 +17,8 @@
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageCalendar"
-            android:layout_width="@dimen/_250sdp"
-            android:layout_height="@dimen/_250sdp"
+            android:layout_width="@dimen/_200sdp"
+            android:layout_height="@dimen/_200sdp"
             android:layout_gravity="center"
             android:src="@drawable/ic_launcher_foreground"
             app:riv_oval="true" />

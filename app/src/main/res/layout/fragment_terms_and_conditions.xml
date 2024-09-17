@@ -6,14 +6,30 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/ll_llcontainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/_30sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    <LinearLayout
         android:id="@+id/ll_scrollcontainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/_30sdp"
-        android:translationY="@dimen/_minus50sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
+        <!--       <TextView
+            android:id="@+id/atribution"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-30dp"
+            android:text="@string/designed_by_Freepik"
+            android:textAlignment="textEnd"
+            android:textSize="@dimen/_6sdp" />-->
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/imageAccountList"
@@ -22,15 +38,6 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_launcher_foreground"
             app:riv_oval="true" />
-
- <!--       <TextView
-            android:id="@+id/atribution"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-30dp"
-            android:text="@string/designed_by_Freepik"
-            android:textAlignment="textEnd"
-            android:textSize="@dimen/_6sdp" />-->
 
         <TextView
             android:id="@+id/textpr_title"
@@ -62,6 +69,7 @@
         android:layout_centerInParent="true"
         android:gravity="center"
         android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_20sdp"
         android:paddingHorizontal="@dimen/_30sdp"
 
         app:layout_constraintTop_toBottomOf="@+id/ll_scrollcontainer">
@@ -92,11 +100,12 @@
         android:backgroundTint="@color/teal_700"
         android:text="@string/action_sign_in"
         android:textColor="@color/white"
+        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_10sdp"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         />
-
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

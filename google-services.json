@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1001618390215",
+    "project_id": "avisa-citas",
+    "storage_bucket": "avisa-citas.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1001618390215:android:8b292a0467a46f5d3a12e2",
+        "android_client_info": {
+          "package_name": "com.gvs.avisacitas"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5GAdYgISvQN0M7KTt6Wp5eiAzrvXQgXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
