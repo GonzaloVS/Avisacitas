@@ -72,14 +72,13 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 
 	public static final int DATABASE_VERSION = 1;
 	public static final String DATABASE_NAME = "avisacitasDB.db";
-	public static final String TABLE_WADATA = GeneralData.class.getSimpleName().toLowerCase();
-	public static final String TABLE_ACCOUNTWCB = Account.class.getSimpleName().toLowerCase();
-	//public static final String TABLE_CONTACTWCB = ContactWCB.class.getSimpleName().toLowerCase();
-	public static final String TABLE_EVENTWCB = CalendarEvent.class.getSimpleName().toLowerCase();
-	private final Context context;
+	public static final String TABLE_DATA = GeneralData.class.getSimpleName().toLowerCase();
+	public static final String TABLE_ACCOUNT = Account.class.getSimpleName().toLowerCase();
+	public static final String TABLE_CALENDAR_EVENT = CalendarEvent.class.getSimpleName().toLowerCase();
+	private Context context;
 
 	static String[] expectedTables;
-	private final String accountWCBTableName = Account.class.getSimpleName().toLowerCase();
+	private final String accountTableName = Account.class.getSimpleName().toLowerCase();
 	private static AvisacitasSQLiteOpenHelper instance;
 	private static final Lock lock = new ReentrantLock();
 
@@ -94,10 +93,9 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 
-		createTableIfNotExist(db, TABLE_WADATA, GeneralData.class);
-		createTableIfNotExist(db, TABLE_ACCOUNTWCB, Account.class);
-		//createTableIfNotExist(db, TABLE_CONTACTWCB, ContactWCB.class);
-		createTableIfNotExist(db, TABLE_EVENTWCB, CalendarEvent.class);
+		createTableIfNotExist(db, TABLE_DATA, GeneralData.class);
+		createTableIfNotExist(db, TABLE_ACCOUNT, Account.class);
+		createTableIfNotExist(db, TABLE_CALENDAR_EVENT, CalendarEvent.class);
 
 		ContentValues defaultValues = new ContentValues();
 		defaultValues.put("fcmToken", "");  // Asignar valores predeterminados
@@ -290,10 +288,10 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 
 		try (SQLiteDatabase db = getInstance(context).getWritableDatabase()) {
 
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_WADATA);
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNTWCB);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_DATA);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNT);
 			//db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTWCB);
-			db.execSQL("DROP TABLE IF EXISTS " + TABLE_EVENTWCB);
+			db.execSQL("DROP TABLE IF EXISTS " + TABLE_CALENDAR_EVENT);
 			onCreate(db);
 
 		} catch (Exception ex) {
@@ -704,7 +702,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 					values.put("lastSyncStatus", 2);
 
 					// Realiza la actualización en la base de datos
-					return db.update(accountWCBTableName, values, "pk_mcid = ?", new String[]{mcid});
+					return db.update(accountTableName, values, "pk_mcid = ?", new String[]{mcid});
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -723,7 +721,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 				try {
 					return executeReadOneRow(
 							db,
-							"SELECT * FROM " + accountWCBTableName + " WHERE pk_mcid = ?",
+							"SELECT * FROM " + accountTableName + " WHERE pk_mcid = ?",
 							new String[]{mcid},
 							Account.class);
 
@@ -745,7 +743,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 			@Override
 			public Account execute(SQLiteDatabase db) {
 				Account account = null;
-				String query = "SELECT * FROM " + accountWCBTableName + " WHERE isActive = \"true\" LIMIT 1";
+				String query = "SELECT * FROM " + accountTableName + " WHERE isActive = \"true\" LIMIT 1";
 				try {
 					account = executeReadOneRow(
 							db,
@@ -811,7 +809,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 
 					ContentValues values = new ContentValues();
 					values.put(columName, epochDateSend);
-					return db.update(TABLE_EVENTWCB, values, "pk_id = ?", new String[]{String.valueOf(id)});
+					return db.update(TABLE_CALENDAR_EVENT, values, "pk_id = ?", new String[]{String.valueOf(id)});
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
 				}
@@ -876,7 +874,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 					values.put("sundayTimeStart", sundayStart);
 					values.put("sundayTimeEnd", sundayEnd);
 
-					db.update(accountWCBTableName, values, "isActive = ?", new String[]{"true"});
+					db.update(accountTableName, values, "isActive = ?", new String[]{"true"});
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -1276,7 +1274,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 					ContentValues values = new ContentValues();
 					values.put("sendWhatsAndSms", sendWhatsAndSms ? 1 : 0);
 					values.put("sendOnlySms", sendOnlySms ? 1 : 0);
-					db.update(accountWCBTableName, values, "isActive = 1 LIMIT 1", null);
+					db.update(accountTableName, values, "isActive = 1 LIMIT 1", null);
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
 				}
@@ -1313,7 +1311,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 						default:
 							break;
 					}
-					db.update(accountWCBTableName, values, "isActive = ?", new String[]{"1"});
+					db.update(accountTableName, values, "isActive = ?", new String[]{"1"});
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
 				}
@@ -1363,7 +1361,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 				try {
 					ContentValues values = new ContentValues();
 					values.put(typeReminder, isChecked ? 1 : 0);
-					db.update(accountWCBTableName, values, "isActive = ?", new String[]{"1"});
+					db.update(accountTableName, values, "isActive = ?", new String[]{"1"});
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
 				}
@@ -1509,7 +1507,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 			@Override
 			public String execute(SQLiteDatabase db) {
 				try {
-					String query = "SELECT * FROM " + accountWCBTableName + " WHERE email = ?";
+					String query = "SELECT * FROM " + accountTableName + " WHERE email = ?";
 					Account result = executeReadOneRow(db, query, new String[]{email}, Account.class);
 					return result != null ? result.getPk_mcid() : null;  // Asume que Account tiene un método getPkMcid()
 				} catch (Exception ex) {

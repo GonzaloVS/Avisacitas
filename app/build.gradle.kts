@@ -1,8 +1,9 @@
 plugins {
     id("com.android.application")
-
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
+
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -68,6 +69,14 @@ dependencies {
     //Glide
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
+    //Hilt
+    implementation ("com.google.dagger:hilt-android:2.44")
+    annotationProcessor ("com.google.dagger:hilt-compiler:2.44")
+
+    // Para ViewModel
+    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    annotationProcessor ("androidx.hilt:hilt-compiler:1.0.0")
 
 
 

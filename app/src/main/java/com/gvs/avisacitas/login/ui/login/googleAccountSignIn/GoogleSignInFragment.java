@@ -24,6 +24,7 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.gvs.avisacitas.R;
+import com.gvs.avisacitas.utils.error.LogHelper;
 
 public class GoogleSignInFragment extends Fragment {
 
@@ -56,6 +57,20 @@ public class GoogleSignInFragment extends Fragment {
 
 		return view;
 	}
+
+	@Override
+	public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+
+		try {
+
+			mViewModel = new GoogleSignInViewModel(requireActivity().getApplication());
+
+		} catch (Exception ex) {
+			LogHelper.addLogError(ex);
+		}
+	}
+
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -111,15 +126,19 @@ public class GoogleSignInFragment extends Fragment {
 		switch (statusCode) {
 			case GoogleSignInStatusCodes.SIGN_IN_CANCELLED:
 				Toast.makeText(getContext(), "Sign in cancelled", Toast.LENGTH_SHORT).show();
+				LogHelper.addLogInfo("Sign in cancelled " + statusCode);
 				break;
 			case GoogleSignInStatusCodes.SIGN_IN_FAILED:
 				Toast.makeText(getContext(), "Sign in failed", Toast.LENGTH_SHORT).show();
+				LogHelper.addLogInfo("Sign in failed " + statusCode);
 				break;
 			case GoogleSignInStatusCodes.NETWORK_ERROR:
 				Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+				LogHelper.addLogInfo("Network error " + statusCode);
 				break;
 			default:
 				Toast.makeText(getContext(), "Error code: " + statusCode, Toast.LENGTH_SHORT).show();
+				LogHelper.addLogInfo("Error code: " + statusCode);
 				break;
 		}
 	}

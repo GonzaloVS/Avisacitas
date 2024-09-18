@@ -5,15 +5,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.google.gms:google-services:4.4.2")
-        classpath ("com.android.tools.build:gradle:8.1.4")
+        classpath("com.android.tools.build:gradle:8.1.4")
+        classpath("com.google.dagger:hilt-android-gradle-plugin:2.44")
     }
 }
 
-
 plugins {
-    id("com.android.application") version "8.2.0" apply false
+    // Define el plugin de Android y otros plugins que uses en los módulos
+    id("com.android.application") version "8.1.4" apply false
 
-    // Add the dependency for the Google services Gradle plugin
+    // Mantener solo la definición del plugin de Google Services aquí
     id("com.google.gms.google-services") version "4.4.2" apply false
 }

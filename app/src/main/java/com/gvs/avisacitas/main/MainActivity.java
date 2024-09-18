@@ -1,6 +1,7 @@
 package com.gvs.avisacitas.main;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
 	private ActivityMainBinding binding;
 	private SharedViewModel sharedViewModel;
+	private TextView textEventTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
 		NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 		NavigationUI.setupWithNavController(binding.navView, navController);
 
+		// Obtener el TextView para el título del evento
+		textEventTitle = findViewById(R.id.text_event_title);
+
 		// Obtener el ViewModel asociado a esta Activity
 		sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
 
@@ -41,8 +46,12 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onChanged(List<String> events) {
 				// Actualizar la interfaz de usuario con la lista de eventos
-				// Aquí puedes actualizar un TextView, RecyclerView, etc.
-				//updateUIWithEvents(events);
+				if (events != null && !events.isEmpty()) {
+					// Mostrar el título del evento actual
+					textEventTitle.setText(events.get(events.size() - 1)); // Muestra el título del último evento
+				} else {
+					textEventTitle.setText("No hay eventos disponibles");
+				}
 			}
 		});
 	}

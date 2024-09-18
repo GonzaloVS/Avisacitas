@@ -36,11 +36,13 @@ public class TermsAndConditionsFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
+		// Inicializar el binding
+		binding = FragmentTermsAndConditionsBinding.inflate(inflater, container, false);
+		View view = binding.getRoot();
 
-		View view = inflater.inflate(R.layout.fragment_terms_and_conditions, container, false);
-
-		CheckBox checkBox = view.findViewById(R.id.checkBox);
-		Button acceptButton = view.findViewById(R.id.pr_continue_btn);
+		// Acceder a las vistas a través del binding
+		CheckBox checkBox = binding.checkBox;
+		Button acceptButton = binding.prContinueBtn;
 
 		// Deshabilita el botón inicialmente
 		acceptButton.setEnabled(false);
@@ -65,7 +67,6 @@ public class TermsAndConditionsFragment extends Fragment {
 		setTextLinks();
 
 		mViewModel = new ViewModelProvider(this).get(TermsAndConditionsViewModel.class);
-		//mViewModel.init(this);  // Inicializa el ViewModel
 	}
 
 	@Override
@@ -77,28 +78,27 @@ public class TermsAndConditionsFragment extends Fragment {
 
 	private void setTextLinks(){
 		try{
-		// Frase
-		String fullText = getString(R.string.agree_checkbox);
+			// Frase
+			String fullText = getString(R.string.agree_checkbox);
 
-		// Palabras que deben tener un enlace
-		String[] linkTexts = new String[]{
-				"Terms of Service",
-				"Privacy Policy."
-		};
+			// Palabras que deben tener un enlace
+			String[] linkTexts = new String[]{
+					"Terms of Service",
+					"Privacy Policy."
+			};
 
-		//Enlaces
-		String[] links = new String[]{
-				getString(R.string.agree_terms_url),
-				getString(R.string.agree_privacy_url)
-		};
+			//Enlaces
+			String[] links = new String[]{
+					getString(R.string.agree_terms_url),
+					getString(R.string.agree_privacy_url)
+			};
 
-		// Aplicamos los enlaces usando LinkHelper
-		LinkHelper.setTextLinks(requireContext(), binding.textCheckbox, fullText, linkTexts, links, R.color.link_blue);
+			// Aplicamos los enlaces usando LinkHelper
+			LinkHelper.setTextLinks(requireContext(), binding.textCheckbox, fullText, linkTexts, links, R.color.link_blue);
 
-		}catch (Exception ex){
+		} catch (Exception ex) {
 			LogHelper.addLogError(ex);
 		}
-
 	}
 
 }

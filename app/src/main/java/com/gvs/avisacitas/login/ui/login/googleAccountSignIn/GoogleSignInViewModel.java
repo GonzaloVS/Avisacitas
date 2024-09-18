@@ -1,5 +1,7 @@
 package com.gvs.avisacitas.login.ui.login.googleAccountSignIn;
 
+import android.Manifest;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,18 +11,18 @@ import android.net.Uri;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.transition.Transition;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.gvs.avisacitas.Manifest;
 import com.gvs.avisacitas.main.MainActivity;
 import com.gvs.avisacitas.model.accounts.Account;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
@@ -29,18 +31,22 @@ import com.gvs.avisacitas.utils.error.LogHelper;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
-public class GoogleSignInViewModel extends ViewModel {
-	// TODO: Implement the ViewModel
+public class GoogleSignInViewModel extends AndroidViewModel {
+    // TODO: Implement the ViewModel
 
-    private final Context context = null;
-    private final AvisacitasSQLiteOpenHelper dbHelper = new AvisacitasSQLiteOpenHelper(context);
+    private Context context = null;
+    private AvisacitasSQLiteOpenHelper dbHelper = new AvisacitasSQLiteOpenHelper(context);
     private static final int STARTING_PK_MCID = 8000;
 
     private final MutableLiveData<Boolean> _saveAccountStatus = new MutableLiveData<>();
     public LiveData<Boolean> saveAccountStatus = _saveAccountStatus;
 
-    public GoogleSignInViewModel() {
+    public GoogleSignInViewModel(@NonNull Application application) {
+        super(application);
+        this.context = application.getApplicationContext();
+        dbHelper = AvisacitasSQLiteOpenHelper.getInstance(application);
     }
+
 
     public boolean doesAccountExist(String email) {
         List<Account> existingAccounts = dbHelper.getAllAccounts();
@@ -71,6 +77,9 @@ public class GoogleSignInViewModel extends ViewModel {
                             saveAccount(accountName, displayName, profileImageBytes);
 
                             _saveAccountStatus.setValue(true); // Indicar éxito
+
+                            // Navegar a MainActivity
+                            navigateToMainActivity();
 
                         } catch (Exception ex) {
                             LogHelper.addLogError(ex);
@@ -182,6 +191,12 @@ public class GoogleSignInViewModel extends ViewModel {
         }
         // Si llegamos aquí, no se pudo obtener el número de teléfono
         return "";
+    }
+
+    private void navigateToMainActivity() {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
     }
 
 }
