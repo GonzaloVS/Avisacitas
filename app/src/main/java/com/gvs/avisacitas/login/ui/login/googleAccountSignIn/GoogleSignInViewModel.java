@@ -1,5 +1,6 @@
 package com.gvs.avisacitas.login.ui.login.googleAccountSignIn;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -13,8 +14,12 @@ import android.transition.Transition;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.gvs.avisacitas.Manifest;
 import com.gvs.avisacitas.main.MainActivity;
 import com.gvs.avisacitas.model.accounts.Account;
@@ -27,9 +32,15 @@ import java.util.List;
 public class GoogleSignInViewModel extends ViewModel {
 	// TODO: Implement the ViewModel
 
-    private final AvisacitasSQLiteOpenHelper dbHelper;
+    private final Context context = null;
+    private final AvisacitasSQLiteOpenHelper dbHelper = new AvisacitasSQLiteOpenHelper(context);
     private static final int STARTING_PK_MCID = 8000;
-    private final Context context;
+
+    private final MutableLiveData<Boolean> _saveAccountStatus = new MutableLiveData<>();
+    public LiveData<Boolean> saveAccountStatus = _saveAccountStatus;
+
+    public GoogleSignInViewModel() {
+    }
 
     public boolean doesAccountExist(String email) {
         List<Account> existingAccounts = dbHelper.getAllAccounts();
@@ -42,38 +53,38 @@ public class GoogleSignInViewModel extends ViewModel {
     }
 
     public void saveAccountWithProfileImage(String accountName, String displayName, Uri photoUrl) {
-        if (doesAccountExist(accountName)) return;
+        if (doesAccountExist(accountName)) {
+            _saveAccountStatus.setValue(false);
+            return;
+        }
 
-        Glide.with(getApplication().getApplicationContext())
+        Glide.with(context.getApplicationContext())
                 .asBitmap()
                 .load(photoUrl)
                 .into(new CustomTarget<Bitmap>() {
                     @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable com.bumptech.glide.request.transition.Transition<? super Bitmap> transition) {
                         try {
                             ByteArrayOutputStream stream = new ByteArrayOutputStream();
                             resource.compress(Bitmap.CompressFormat.PNG, 100, stream);
                             byte[] profileImageBytes = stream.toByteArray();
                             saveAccount(accountName, displayName, profileImageBytes);
 
-                            Intent intent = new Intent(context, MainActivity.class);
-                            // Añadir la bandera FLAG_ACTIVITY_NEW_TASK.
-                            // Esta bandera indica que la nueva actividad debe iniciarse en una nueva tarea, lo cual es necesario cuando el Context no es una actividad.
-                            // Específicamente, se usa cuando se inicia una actividad desde el contexto de la aplicación.
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intent);
+                            _saveAccountStatus.setValue(true); // Indicar éxito
 
-                        }catch (Exception ex){
+                        } catch (Exception ex) {
                             LogHelper.addLogError(ex);
+                            _saveAccountStatus.setValue(false); // Indicar fallo
                         }
                     }
+
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) {
                         // Manejar la limpieza de recursos si es necesario
                     }
                 });
     }
+
 
     private boolean saveAccount(String accountName, String displayName, byte[] profileImageBytes) {
         String pkMcid = getAvailablePkMcid();
@@ -110,6 +121,7 @@ public class GoogleSignInViewModel extends ViewModel {
         dbHelper.insertOrUpdateFromObjectList(List.of(account));
         return true;
     }
+
 
     private String getAvailablePkMcid() {
         int pkMcid = STARTING_PK_MCID;
