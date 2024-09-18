@@ -15,8 +15,6 @@ import com.gvs.avisacitas.model.accounts.Account;
 import com.gvs.avisacitas.model.calendar.CalendarEvent;
 import com.gvs.avisacitas.utils.error.LogHelper;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -714,92 +712,11 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 		executeWithTransaction(task);
 	}
 
-	public Account getAccountWCBFromDBByMcid(String mcid) {
-		DatabaseTask<Account> task = new DatabaseTask<>() {
-			@Override
-			public Account execute(SQLiteDatabase db) {
-				try {
-					return executeReadOneRow(
-							db,
-							"SELECT * FROM " + accountTableName + " WHERE pk_mcid = ?",
-							new String[]{mcid},
-							Account.class);
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return null;
-			}
-		};
-
-		executeWithoutTransaction(task);
-
-		return null;
-	}
-
-	public Account getActiveAccountWCB() {
-
-		DatabaseTask<Account> task = new DatabaseTask<>() {
-			@Override
-			public Account execute(SQLiteDatabase db) {
-				Account account = null;
-				String query = "SELECT * FROM " + accountTableName + " WHERE isActive = \"true\" LIMIT 1";
-				try {
-					account = executeReadOneRow(
-							db,
-							query,
-							new String[]{},
-							Account.class
-					);
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return account;
-			}
-		};
-
-		return executeWithoutTransaction(task);
-
-	}
-
-	public void dbInsertAccountWCBBlocking(JSONObject valuesFromPost) {
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-					JSONObject responseAccountJson = valuesFromPost.getJSONArray("phones").getJSONObject(0);
-					String mcid = responseAccountJson.getString("mcid");
-
-					// Obtener la cuenta desde la base de datos usando el método recién creado
-					Account existingAccount = getAccountWCBFromDBByMcid(mcid);
-
-					// Si la cuenta no existe, crear una nueva
-					if (existingAccount != null)
-						return null;
-
-					existingAccount = new Account();
-					existingAccount.setPk_mcid(mcid);
-					existingAccount.setPhone(responseAccountJson.getString("phone"));
-					existingAccount.setName(responseAccountJson.getString("name"));
-					existingAccount.setEmail(responseAccountJson.getString("email"));
-					existingAccount.setWaToken(responseAccountJson.getString("token"));
-					existingAccount.setConnect("false");
-					existingAccount.setEpochUTCAdded(System.currentTimeMillis() / 1000L);
 
 
-					// Insertar la nueva cuenta en la base de datos
-					insertOrUpdateFromObjectList(List.of(existingAccount));
 
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return null;
-			}
-		};
 
-		executeWithTransaction(task);
-	}
+
 
 	public void updateEvent(final long id, String columName, final long epochDateSend) {
 		DatabaseTask<Integer> task = new DatabaseTask<>() {
@@ -824,66 +741,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 		getInstance(context).getWritableDatabase().delete(tableName, whereClase, whereArgs);
 	}
 
-	public String getCustomOncreateMsg(String pkMcid) {
-		DatabaseTask<String> task = new DatabaseTask<>() {
-			@Override
-			public String execute(SQLiteDatabase db) {
-				try {
 
-					return executeReadOneValue(db, "SELECT customOncreateMsg FROM accountswcb WHERE pk_mcid = ?", new String[]{pkMcid}, "pk_mcid").toString();
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return "";
-			}
-		};
-
-		return executeWithoutTransaction(task);
-	}
-
-
-	public void updateScheduleFromActiveAccount(
-			int mondayStart, int mondayEnd,
-			int tuesdayStart, int tuesdayEnd,
-			int wednesdayStart, int wednesdayEnd,
-			int thursdayStart, int thursdayEnd,
-			int fridayStart, int fridayEnd,
-			int saturdatStart, int saturdayEnd,
-			int sundayStart, int sundayEnd) {
-
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-
-					ContentValues values = new ContentValues();
-
-					values.put("mondayTimeStart", mondayStart);
-					values.put("mondayTimeEnd", mondayEnd);
-					values.put("tuesdayTimeStart", tuesdayStart);
-					values.put("tuesdayTimeEnd", tuesdayEnd);
-					values.put("wednesdayTimeStart", wednesdayStart);
-					values.put("wednesdayTimeEnd", wednesdayEnd);
-					values.put("thursdayTimeStart", thursdayStart);
-					values.put("thursdayTimeEnd", thursdayEnd);
-					values.put("fridayTimeStart", fridayStart);
-					values.put("fridayTimeEnd", fridayEnd);
-					values.put("saturdayTimeStart", saturdatStart);
-					values.put("saturdayTimeEnd", saturdayEnd);
-					values.put("sundayTimeStart", sundayStart);
-					values.put("sundayTimeEnd", sundayEnd);
-
-					db.update(accountTableName, values, "isActive = ?", new String[]{"true"});
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return null;
-			}
-		};
-		executeWithTransaction(task);
-	}
 
 
 	@SuppressLint("Range")
@@ -1265,62 +1123,7 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 		return emptyEvent;
 	}
 
-	public void updateMessageServiceFromActiveAccount(boolean sendWhatsAndSms, boolean sendOnlySms) {
 
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-					ContentValues values = new ContentValues();
-					values.put("sendWhatsAndSms", sendWhatsAndSms ? 1 : 0);
-					values.put("sendOnlySms", sendOnlySms ? 1 : 0);
-					db.update(accountTableName, values, "isActive = 1 LIMIT 1", null);
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-			return  null;
-			}
-		};
-
-		executeWithTransaction(task);
-	}
-
-
-	public void updateCustomMessageFormActiveAccount(String messageType, String message) {
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-					ContentValues values = new ContentValues();
-					switch (messageType) {
-						case "oncreate":
-							values.put("customOncreateMsg", message);
-							break;
-						case "two_days":
-							values.put("customTwoDaysMsg", message);
-							break;
-						case "one_day":
-							values.put("customOneDayMsg", message);
-							break;
-						case "five_min":
-							values.put("customFiveMinMsg", message);
-							break;
-						case "post":
-							values.put("customPostMsg", message);
-							break;
-						default:
-							break;
-					}
-					db.update(accountTableName, values, "isActive = ?", new String[]{"1"});
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return null;
-			}
-		};
-
-		executeWithTransaction(task);
-	}
 
 
 /*	public void updatePanicBtnFromActiveAccount(boolean isChecked) {
@@ -1390,134 +1193,8 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 		return executeWithoutTransaction(task);
 	}
 
-	public List<String> getAllMcidFromAccounts() {
-		DatabaseTask<List<String>> task = new DatabaseTask<>() {
-			@Override
-			public List<String> execute(SQLiteDatabase db) {
-				List<String> mcidList = new ArrayList<>();
-				// Realizar una consulta para obtener todos los `mcid`
-				try (Cursor cursor = db.query(
-						Account.class.getSimpleName().toLowerCase(),
-						new String[]{"pk_mcid"}, // Solo recuperar la columna `mcid`
-						null, // No hay condición WHERE
-						null, // Sin argumentos para WHERE
-						null, null, null
-				)) {
-					while (cursor.moveToNext()) {
-						mcidList.add(cursor.getString(cursor.getColumnIndexOrThrow("pk_mcid")));
-					}
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-					return null;
-				}
-				return mcidList;
-			}
-		};
-		return executeWithTransaction(task);
-	}
-
-	public List<Account> getAllAccounts() {
-		DatabaseTask<List<Account>> task = new DatabaseTask<>() {
-			@Override
-			public List<Account> execute(SQLiteDatabase db) {
-				List<Account> accountList = new ArrayList<>();
-				try (Cursor cursor = db.query(
-						Account.class.getSimpleName().toLowerCase(),
-						null, // Recuperar todas las columnas
-						null, // No hay condición WHERE
-						null, // Sin argumentos para WHERE
-						null, null, null // Sin GROUP BY, HAVING, ORDER BY
-				)) {
-					while (cursor.moveToNext()) {
-						Account account = new Account();
-
-						account.setName(cursor.getString(cursor.getColumnIndexOrThrow("name")));
-						account.setPk_mcid(cursor.getString(cursor.getColumnIndexOrThrow("pk_mcid")));
-						accountList.add(account);
-					}
-				} catch (Exception ex) {
-					// Manejo de errores, registro, etc.
-					LogHelper.addLogError(ex);
-					return null;
-				}
-				return accountList;
-			}
-		};
-		return executeWithTransaction(task);
-	}
 
 
-
-	public List<String> getAllEmailsFromAccountwcb() {
-		DatabaseTask<List<String>> task = new DatabaseTask<>() {
-			@Override
-			public List<String> execute(SQLiteDatabase db) {
-
-
-				List<String> emails = new ArrayList<>();
-				String selectQuery = "SELECT email FROM accountwcb";
-
-				try (Cursor cursor = db.rawQuery(selectQuery, null)) {
-					while (cursor.moveToNext()) {
-						emails.add(cursor.getString(cursor.getColumnIndexOrThrow("email")));
-					}
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-					return null;
-				}
-				return emails;
-			}
-		};
-		return executeWithTransaction(task);
-	}
-
-	public void setActiveAccount(String mcid) {
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-					// Crear la sentencia SQL para actualizar el estado activo
-					String sql = "UPDATE accountwcb SET isActive = (CASE WHEN pk_mcid = ? THEN 1 ELSE 0 END)";
-					SQLiteStatement statement = db.compileStatement(sql);
-
-					// Enlazar el parámetro mcid a la sentencia
-					statement.bindString(1, mcid);
-
-					// Ejecutar la sentencia y obtener el número de filas afectadas
-					//statement.execute(); //Ejecuta una declaración SQL que no devuelve ningún valor, como CREATE, INSERT, UPDATE, o DELETE.
-					int affectedRows = statement.executeUpdateDelete();
-					LogHelper.addLogInfo("Rows affected: " + affectedRows);
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-					return null;
-				}
-				return null;
-			}
-		};
-		executeWithTransaction(task);
-	}
-
-
-
-
-	public String getPkMcidByEmail(String email) {
-		DatabaseTask<String> task = new DatabaseTask<>() {
-			@Override
-			public String execute(SQLiteDatabase db) {
-				try {
-					String query = "SELECT * FROM " + accountTableName + " WHERE email = ?";
-					Account result = executeReadOneRow(db, query, new String[]{email}, Account.class);
-					return result != null ? result.getPk_mcid() : null;  // Asume que Account tiene un método getPkMcid()
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return null;
-			}
-		};
-		return executeWithTransaction(task);
-	}
 
 	public String getPanicBtn() {
 
@@ -1567,95 +1244,6 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 		executeWithTransaction(task);
 	}
 
-	public void saveCompanyNameToDatabase(String companyName) {
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-					// Crear los valores que se van a actualizar
-					ContentValues values = new ContentValues();
-					values.put("companyName", companyName);
-
-					// Actualizar el registro donde isActive = 1 (es decir, la cuenta activa)
-					db.update("accountwcb", values, "isActive = ?", new String[]{"true"});
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return null;
-			}
-		};
-
-		executeWithTransaction(task);
-	}
-
-	public String getCompanyName() {
-		DatabaseTask<String> task = new DatabaseTask<>() {
-			@Override
-			public String execute(SQLiteDatabase db) {
-				String companyName = null;
-				String query = "SELECT companyName FROM accountwcb WHERE isActive = 'true' LIMIT 1";
-
-				try (Cursor cursor = db.rawQuery(query, null)) {
-					if (cursor != null && cursor.moveToFirst()) {
-						companyName = cursor.getString(cursor.getColumnIndexOrThrow("companyName"));
-					}
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return companyName != null ? companyName : "No company name";
-			}
-		};
-
-		return executeWithoutTransaction(task);
-	}
-
-
-
-	public void saveMessageTextToDatabase(String messageText) {
-		DatabaseTask<Void> task = new DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
-				try {
-					// Crear los valores que se van a actualizar
-					ContentValues values = new ContentValues();
-					values.put("customOncreateMsg", messageText);
-
-					// Actualizar el registro donde isActive = 1 (es decir, la cuenta activa)
-					db.update("accountwcb", values, "isActive = ?", new String[]{"true"});
-
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-
-				return null;
-			}
-		};
-
-		// Ejecutar la transacción
-		executeWithTransaction(task);
-	}
-
-	public String getCustomOncreateMsg() {
-		DatabaseTask<String> task = new DatabaseTask<>() {
-			@Override
-			public String execute(SQLiteDatabase db) {
-				String customOncreateMsg = null;
-				String query = "SELECT customOncreateMsg FROM accountwcb WHERE isActive = 'true' LIMIT 1";
-
-				try (Cursor cursor = db.rawQuery(query, null)) {
-					if (cursor != null && cursor.moveToFirst()) {
-						customOncreateMsg = cursor.getString(cursor.getColumnIndexOrThrow("customOncreateMsg"));
-					}
-				} catch (Exception ex) {
-					LogHelper.addLogError(ex);
-				}
-				return customOncreateMsg != null ? customOncreateMsg : "No message text";
-			}
-		};
-
-		return executeWithoutTransaction(task);
-	}
 
 
 }

@@ -10,11 +10,8 @@ import android.widget.TextView;
 
 import com.gvs.avisacitas.R;
 import com.gvs.avisacitas.login.ui.login.LoginActivity;
-import com.gvs.avisacitas.main.MainActivity;
 import com.gvs.avisacitas.model.accounts.Account;
-import com.gvs.avisacitas.model.calendar.CalendarHelper;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
-import com.gvs.avisacitas.utils.error.LogHelper;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -85,7 +82,7 @@ public class SplashActivity extends AppCompatActivity {
 
 					avisacitasSQLiteOpenHelper.updatePanicBtn(true);
 
-					Account hasAccount = avisacitasSQLiteOpenHelper.getActiveAccountWCB();
+					Account hasAccount = avisacitasSQLiteOpenHelper.getActiveAccount();
 					if (hasAccount ==null) {
 
 					}

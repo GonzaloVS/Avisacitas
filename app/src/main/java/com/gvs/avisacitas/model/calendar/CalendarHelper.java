@@ -223,7 +223,7 @@ public class CalendarHelper {
     public static void insertOrUpdateAllCalendarEvents(Context context) {
 
         AvisacitasSQLiteOpenHelper avisacitasSQLiteOpenHelper = new AvisacitasSQLiteOpenHelper(context);
-        List<String> emails = avisacitasSQLiteOpenHelper.getAllEmailsFromAccountwcb();
+        List<String> emails = avisacitasSQLiteOpenHelper.getAllEmailsFromAccount();
 
         for (String email : emails) {
             CalendarHelper.insertOrUpdateCalendarEventsByEmail(context, email);
