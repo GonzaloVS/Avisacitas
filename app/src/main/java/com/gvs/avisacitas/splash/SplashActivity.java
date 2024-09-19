@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.gvs.avisacitas.R;
 import com.gvs.avisacitas.login.ui.login.LoginActivity;
 import com.gvs.avisacitas.model.accounts.Account;
+import com.gvs.avisacitas.model.sqlite.AccountRepository;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
+import com.gvs.avisacitas.model.sqlite.GeneralDataRepository;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -47,6 +49,8 @@ public class SplashActivity extends AppCompatActivity {
 		loadingFileText = findViewById(R.id.loading_file_text);
 
 		AvisacitasSQLiteOpenHelper avisacitasSQLiteOpenHelper = new AvisacitasSQLiteOpenHelper(this);
+		GeneralDataRepository generalDataRepository = new GeneralDataRepository(this);
+		AccountRepository accountRepository = new AccountRepository(this);
 
 		// Simular la carga de archivos
 		new Thread(new Runnable() {
@@ -80,9 +84,9 @@ public class SplashActivity extends AppCompatActivity {
 
 
 
-					avisacitasSQLiteOpenHelper.updatePanicBtn(true);
+				generalDataRepository.updatePanicBtn(true);
 
-					Account hasAccount = avisacitasSQLiteOpenHelper.getActiveAccount();
+					Account hasAccount = accountRepository.getActiveAccount();
 					if (hasAccount ==null) {
 
 					}

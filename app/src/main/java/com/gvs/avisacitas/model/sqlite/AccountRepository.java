@@ -16,6 +16,7 @@ import java.util.List;
 
 public class AccountRepository {
 
+	public static final String TABLE_ACCOUNT = Account.class.getSimpleName().toLowerCase();
 	private final AvisacitasSQLiteOpenHelper dbHelper;
 
 	public AccountRepository(Context context) {
@@ -28,9 +29,9 @@ public class AccountRepository {
 			@Override
 			public Account execute(SQLiteDatabase db) {
 				Account account = null;
-				String query = "SELECT * FROM " + accountTableName + " WHERE isActive = \"true\" LIMIT 1";
+				String query = "SELECT * FROM " + TABLE_ACCOUNT + " WHERE isActive = \"true\" LIMIT 1";
 				try {
-					account = executeReadOneRow(
+					account = DatabaseUtils.executeReadOneRow(
 							db,
 							query,
 							new String[]{},
@@ -44,7 +45,7 @@ public class AccountRepository {
 			}
 		};
 
-		return executeWithoutTransaction(task);
+		return DatabaseUtils.executeWithoutTransaction(task, dbHelper);
 
 	}
 
@@ -53,9 +54,9 @@ public class AccountRepository {
 			@Override
 			public Account execute(SQLiteDatabase db) {
 				try {
-					return executeReadOneRow(
+					return DatabaseUtils.executeReadOneRow(
 							db,
-							"SELECT * FROM " + accountTableName + " WHERE pk_mcid = ?",
+							"SELECT * FROM " + TABLE_ACCOUNT + " WHERE pk_mcid = ?",
 							new String[]{mcid},
 							Account.class);
 
@@ -66,7 +67,7 @@ public class AccountRepository {
 			}
 		};
 
-		executeWithoutTransaction(task);
+		DatabaseUtils.executeWithoutTransaction(task, dbHelper);
 
 		return null;
 	}
@@ -100,7 +101,7 @@ public class AccountRepository {
 				return accountList;
 			}
 		};
-		return executeWithTransaction(task);
+		return DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 
@@ -131,7 +132,7 @@ public class AccountRepository {
 
 
 					// Insertar la nueva cuenta en la base de datos
-					insertOrUpdateFromObjectList(List.of(existingAccount));
+					DatabaseUtils.insertOrUpdateFromObjectList(List.of(existingAccount), dbHelper);
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -140,7 +141,7 @@ public class AccountRepository {
 			}
 		};
 
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 	public void setActiveAccount(String mcid) {
@@ -166,7 +167,7 @@ public class AccountRepository {
 				return null;
 			}
 		};
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 	public List<String> getAllEmailsFromAccount() {
@@ -190,7 +191,7 @@ public class AccountRepository {
 				return emails;
 			}
 		};
-		return executeWithTransaction(task);
+		return DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 	public String getPkMcidByEmail(String email) {
@@ -198,8 +199,8 @@ public class AccountRepository {
 			@Override
 			public String execute(SQLiteDatabase db) {
 				try {
-					String query = "SELECT * FROM " + accountTableName + " WHERE email = ?";
-					Account result = executeReadOneRow(db, query, new String[]{email}, Account.class);
+					String query = "SELECT * FROM " + TABLE_ACCOUNT + " WHERE email = ?";
+					Account result = DatabaseUtils.executeReadOneRow(db, query, new String[]{email}, Account.class);
 					return result != null ? result.getPk_mcid() : null;  // Asume que Account tiene un método getPkMcid()
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -207,7 +208,7 @@ public class AccountRepository {
 				return null;
 			}
 		};
-		return executeWithTransaction(task);
+		return DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 	public List<String> getAllMcidFromAccounts() {
@@ -234,7 +235,7 @@ public class AccountRepository {
 				return mcidList;
 			}
 		};
-		return executeWithTransaction(task);
+		return DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 
@@ -260,7 +261,7 @@ public class AccountRepository {
 			}
 		};
 
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 	public String getCompanyName() {
@@ -281,7 +282,7 @@ public class AccountRepository {
 			}
 		};
 
-		return executeWithoutTransaction(task);
+		return DatabaseUtils.executeWithoutTransaction(task, dbHelper);
 	}
 
 
@@ -307,7 +308,7 @@ public class AccountRepository {
 		};
 
 		// Ejecutar la transacción
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 	public String getCustomOncreateMsg() {
@@ -328,7 +329,7 @@ public class AccountRepository {
 			}
 		};
 
-		return executeWithoutTransaction(task);
+		return DatabaseUtils.executeWithoutTransaction(task, dbHelper);
 	}
 
 	public String getCustomOncreateMsg(String pkMcid) {
@@ -337,7 +338,7 @@ public class AccountRepository {
 			public String execute(SQLiteDatabase db) {
 				try {
 
-					return executeReadOneValue(db, "SELECT customOncreateMsg FROM accountswcb WHERE pk_mcid = ?", new String[]{pkMcid}, "pk_mcid").toString();
+					return DatabaseUtils.executeReadOneValue(db, "SELECT customOncreateMsg FROM accountswcb WHERE pk_mcid = ?", new String[]{pkMcid}, "pk_mcid").toString();
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -346,7 +347,7 @@ public class AccountRepository {
 			}
 		};
 
-		return executeWithoutTransaction(task);
+		return DatabaseUtils.executeWithoutTransaction(task, dbHelper);
 	}
 
 
@@ -376,7 +377,7 @@ public class AccountRepository {
 						default:
 							break;
 					}
-					db.update(accountTableName, values, "isActive = ?", new String[]{"1"});
+					db.update(TABLE_ACCOUNT, values, "isActive = ?", new String[]{"1"});
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
 				}
@@ -384,7 +385,7 @@ public class AccountRepository {
 			}
 		};
 
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 
@@ -397,7 +398,7 @@ public class AccountRepository {
 					ContentValues values = new ContentValues();
 					values.put("sendWhatsAndSms", sendWhatsAndSms ? 1 : 0);
 					values.put("sendOnlySms", sendOnlySms ? 1 : 0);
-					db.update(accountTableName, values, "isActive = 1 LIMIT 1", null);
+					db.update(TABLE_ACCOUNT, values, "isActive = 1 LIMIT 1", null);
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
 				}
@@ -405,7 +406,7 @@ public class AccountRepository {
 			}
 		};
 
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
 
 
@@ -441,7 +442,7 @@ public class AccountRepository {
 					values.put("sundayTimeStart", sundayStart);
 					values.put("sundayTimeEnd", sundayEnd);
 
-					db.update(accountTableName, values, "isActive = ?", new String[]{"true"});
+					db.update(TABLE_ACCOUNT, values, "isActive = ?", new String[]{"true"});
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -449,6 +450,51 @@ public class AccountRepository {
 				return null;
 			}
 		};
-		executeWithTransaction(task);
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
 	}
+
+
+
+	public void updateReminderFormActiveAccount(String typeReminder, boolean isChecked) {
+
+		AvisacitasSQLiteOpenHelper.DatabaseTask<Void> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
+			@Override
+			public Void execute(SQLiteDatabase db) {
+				try {
+					ContentValues values = new ContentValues();
+					values.put(typeReminder, isChecked ? 1 : 0);
+					db.update(TABLE_ACCOUNT, values, "isActive = ?", new String[]{"1"});
+				} catch (Exception ex) {
+					LogHelper.addLogError(ex);
+				}
+				return null;
+			}
+		};
+
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
+	}
+
+	public void updateLastSync(String mcid, long lastSync) {
+		AvisacitasSQLiteOpenHelper.DatabaseTask<Integer> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
+			@Override
+			public Integer execute(SQLiteDatabase db) {
+				try {
+					ContentValues values = new ContentValues();
+					values.put("epochUTCLastSync", lastSync); // Asigna el valor de lastSyncTime
+					values.put("lastSyncStatus", 2);
+
+					// Realiza la actualización en la base de datos
+					return db.update(TABLE_ACCOUNT, values, "pk_mcid = ?", new String[]{mcid});
+
+				} catch (Exception ex) {
+					LogHelper.addLogError(ex);
+				}
+				return -1;
+			}
+		};
+
+		DatabaseUtils.executeWithTransaction(task, dbHelper);
+	}
+
+
 }

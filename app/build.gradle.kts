@@ -78,6 +78,8 @@ dependencies {
     implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     annotationProcessor ("androidx.hilt:hilt-compiler:1.0.0")
 
+    // Dependencia de WorkManager
+    implementation ("androidx.work:work-runtime:2.8.0")
 
 
 }

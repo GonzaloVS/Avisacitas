@@ -25,7 +25,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.gvs.avisacitas.main.MainActivity;
 import com.gvs.avisacitas.model.accounts.Account;
+import com.gvs.avisacitas.model.sqlite.AccountRepository;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
+import com.gvs.avisacitas.model.sqlite.DatabaseUtils;
 import com.gvs.avisacitas.utils.error.LogHelper;
 
 import java.io.ByteArrayOutputStream;
@@ -35,7 +37,8 @@ public class GoogleSignInViewModel extends AndroidViewModel {
     // TODO: Implement the ViewModel
 
     private Context context = null;
-    private AvisacitasSQLiteOpenHelper dbHelper = new AvisacitasSQLiteOpenHelper(context);
+    private final AvisacitasSQLiteOpenHelper dbHelper;
+    private final AccountRepository accountRepository;
     private static final int STARTING_PK_MCID = 8000;
 
     private final MutableLiveData<Boolean> _saveAccountStatus = new MutableLiveData<>();
@@ -45,11 +48,14 @@ public class GoogleSignInViewModel extends AndroidViewModel {
         super(application);
         this.context = application.getApplicationContext();
         dbHelper = AvisacitasSQLiteOpenHelper.getInstance(application);
+        this.accountRepository = new AccountRepository(context);
+    ;
     }
 
 
     public boolean doesAccountExist(String email) {
-        List<Account> existingAccounts = dbHelper.getAllAccounts();
+
+        List<Account> existingAccounts = accountRepository.getAllAccounts();
         for (Account account : existingAccounts) {
             if (account.getEmail().equalsIgnoreCase(email))
                 return true;
@@ -127,14 +133,14 @@ public class GoogleSignInViewModel extends AndroidViewModel {
         );
 
         account.setProfileImage(profileImageBytes);
-        dbHelper.insertOrUpdateFromObjectList(List.of(account));
+        DatabaseUtils.insertOrUpdateFromObjectList(List.of(account), dbHelper);
         return true;
     }
 
 
     private String getAvailablePkMcid() {
         int pkMcid = STARTING_PK_MCID;
-        List<Account> existingAccounts = dbHelper.getAllAccounts();
+        List<Account> existingAccounts = accountRepository.getAllAccounts();
         while (true) {
             boolean isAvailable = true;
             String pkMcidString = String.valueOf(pkMcid);

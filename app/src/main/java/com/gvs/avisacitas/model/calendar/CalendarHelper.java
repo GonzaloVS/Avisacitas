@@ -10,7 +10,9 @@ import android.provider.CalendarContract;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.gvs.avisacitas.model.sqlite.AccountRepository;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
+import com.gvs.avisacitas.model.sqlite.DatabaseUtils;
 import com.gvs.avisacitas.utils.error.LogHelper;
 
 import java.util.ArrayList;
@@ -48,27 +50,33 @@ public class CalendarHelper {
 
     public static void insertOrUpdateCalendarEventsByEmail(Context context, String organizerEmail) {
 
+        AvisacitasSQLiteOpenHelper dbHelper = new AvisacitasSQLiteOpenHelper(context);
+        AccountRepository accountRepository = new AccountRepository(context);
         List<CalendarEvent> calendarEventsList = new ArrayList<>();
         long nowInMillis = Calendar.getInstance().getTimeInMillis();
 
         CalendarEvent currentEvent;
         List<String> phoneNumbers;
 
-        String currentTitle, currentDesc, currentPhone, currentTitleAndDesc;
-        String newTitlePrefix = startMark+"⚠\uFE0F"+"[FORMATO NO VÁLIDO]"+endMark+" ";
-        String newDescriptionSuffix =  startMark+"<br><br><b>Formato no válido:</b><br>" +
-                "Consulta:<br>" +
-                "https://wachatbot.com/phone" +
-                endMark;
+        String currentTitle, currentDesc, currentPhone, currentTitleAndDesc,
+        pkMcid = accountRepository.getPkMcidByEmail(organizerEmail),
+        newTitlePrefix =
+            startMark +
+            "⚠\uFE0F" +
+            "[FORMATO NO VÁLIDO]" +
+            endMark +
+            " ",
+        newDescriptionSuffix =
+            startMark +
+            "<br><br><b>Formato no válido:</b><br>" +
+            "Consulta:<br>" +
+            "https://wachatbot.com/phone" +
+            endMark;
 
         String[] eventSelectionArgs = new String[]{
                 String.valueOf(nowInMillis),
                 organizerEmail
         };
-
-        AvisacitasSQLiteOpenHelper avisacitasSQLiteOpenHelper = new AvisacitasSQLiteOpenHelper(context);
-
-        String pkMcid = avisacitasSQLiteOpenHelper.getPkMcidByEmail(organizerEmail);
 
         Cursor eventCursor = context.getContentResolver().query(CalendarContract.Events.CONTENT_URI,
                 EVENT_PROJECTION, EVENT_SELECTION, eventSelectionArgs, null);
@@ -122,7 +130,7 @@ public class CalendarHelper {
             } while (eventCursor.moveToNext());
 
             // Guardar eventos en la base de datos
-            avisacitasSQLiteOpenHelper.insertOrUpdateFromObjectList(calendarEventsList);
+            DatabaseUtils.insertOrUpdateFromObjectList(calendarEventsList, dbHelper);
 
             // Actualizar los teléfonos en la base de datos
             //avisacitasSQLiteOpenHelper.updatePhoneInEvents(calendarEventsList);
@@ -222,8 +230,8 @@ public class CalendarHelper {
 
     public static void insertOrUpdateAllCalendarEvents(Context context) {
 
-        AvisacitasSQLiteOpenHelper avisacitasSQLiteOpenHelper = new AvisacitasSQLiteOpenHelper(context);
-        List<String> emails = avisacitasSQLiteOpenHelper.getAllEmailsFromAccount();
+        AccountRepository accountRepository = new AccountRepository(context);
+        List<String> emails = accountRepository.getAllEmailsFromAccount();
 
         for (String email : emails) {
             CalendarHelper.insertOrUpdateCalendarEventsByEmail(context, email);
