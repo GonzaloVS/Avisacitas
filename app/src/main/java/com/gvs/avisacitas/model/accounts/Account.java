@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.gvs.avisacitas.GlobalReferences;
 
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class Account implements Serializable {
@@ -235,6 +237,27 @@ public class Account implements Serializable {
 				", isConnect=" + isConnect +
 				", epochAdded=" + epochUTCAdded +
 				'}';
+	}
+
+
+	public JSONObject toJsonObject() {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put("name", name);
+			jsonObject.put("waToken", waToken);
+			jsonObject.put("phone", phone);
+			jsonObject.put("pk_mcid", pk_mcid);
+			jsonObject.put("email", email);
+			jsonObject.put("isConnect", isConnect);
+			jsonObject.put("epochUTCAdded", epochUTCAdded);
+			jsonObject.put("isActive", isActive);
+			jsonObject.put("companyName", companyName);
+			jsonObject.put("customPostMsg", customPostMsg);
+
+		} catch (Exception e) {
+			e.printStackTrace();  // Manejo de errores en caso de fallo al crear el JSONObject
+		}
+		return jsonObject;
 	}
 
 }

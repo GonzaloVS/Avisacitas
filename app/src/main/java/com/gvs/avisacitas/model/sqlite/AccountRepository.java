@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteStatement;
 import com.gvs.avisacitas.model.accounts.Account;
 import com.gvs.avisacitas.utils.error.LogHelper;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -107,32 +108,79 @@ public class AccountRepository {
 
 
 	public void dbInsertAccountBlocking(JSONObject valuesFromPost) {
-		AvisacitasSQLiteOpenHelper.DatabaseTask<Void> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
-			@Override
-			public Void execute(SQLiteDatabase db) {
+//		AvisacitasSQLiteOpenHelper.DatabaseTask<Void> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
+//			@Override
+//			public Void execute(SQLiteDatabase db) {
 				try {
-					JSONObject responseAccountJson = valuesFromPost.getJSONArray("phones").getJSONObject(0);
-					String mcid = responseAccountJson.getString("mcid");
+					JSONObject responseAccountJson = valuesFromPost;
+					// JSONObject responseAccountJson = valuesFromPost.getJSONArray("phone").getJSONObject(0);
+					String mcid = responseAccountJson.getString("pk_mcid");
 
 					// Obtener la cuenta desde la base de datos usando el método recién creado
 					Account existingAccount = getAccountFromDBByMcid(mcid);
 
 					// Si la cuenta no existe, crear una nueva
 					if (existingAccount != null)
-						return null;
+						return;
+						//return null;
 
 					existingAccount = new Account();
 					existingAccount.setPk_mcid(mcid);
 					existingAccount.setPhone(responseAccountJson.getString("phone"));
 					existingAccount.setName(responseAccountJson.getString("name"));
 					existingAccount.setEmail(responseAccountJson.getString("email"));
-					existingAccount.setWaToken(responseAccountJson.getString("token"));
-					existingAccount.setConnect("false");
+					existingAccount.setWaToken(responseAccountJson.getString("waToken"));
+					existingAccount.setConnect("true");
+					existingAccount.setActive("true");
 					existingAccount.setEpochUTCAdded(System.currentTimeMillis() / 1000L);
 
 
 					// Insertar la nueva cuenta en la base de datos
 					DatabaseUtils.insertOrUpdateFromObjectList(List.of(existingAccount), dbHelper);
+
+					LogHelper.addLogInfo("Account added");
+
+				} catch (Exception ex) {
+					LogHelper.addLogError(ex);
+				}
+//				return null;
+//			}
+//		};
+//
+//		DatabaseUtils.executeWithTransaction(task, dbHelper);
+	}
+
+/*	public void dbInsertAccountBlocking(JSONArray accountsArray) {
+		AvisacitasSQLiteOpenHelper.DatabaseTask<Void> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
+			@Override
+			public Void execute(SQLiteDatabase db) {
+				try {
+					// Iterar sobre el JSONArray y procesar cada JSONObject
+					for (int i = 0; i < accountsArray.length(); i++) {
+						JSONObject responseAccountJson = accountsArray.getJSONObject(i);
+						String mcid = responseAccountJson.getString("pk_mcid");
+
+						// Obtener la cuenta desde la base de datos usando el método recién creado
+						Account existingAccount = getAccountFromDBByMcid(mcid);
+
+						// Si la cuenta no existe, crear una nueva
+						if (existingAccount != null) {
+							continue; // Pasar al siguiente objeto en el array si la cuenta ya existe
+						}
+
+						// Crear una nueva cuenta
+						Account newAccount = new Account();
+						newAccount.setPk_mcid(mcid);
+						newAccount.setPhone(responseAccountJson.getString("phone"));
+						newAccount.setName(responseAccountJson.getString("name"));
+						newAccount.setEmail(responseAccountJson.getString("email"));
+						newAccount.setWaToken(responseAccountJson.getString("waToken"));
+						newAccount.setConnect("false");
+						newAccount.setEpochUTCAdded(System.currentTimeMillis() / 1000L);
+
+						// Insertar la nueva cuenta en la base de datos
+						DatabaseUtils.insertOrUpdateFromObjectList(List.of(newAccount), dbHelper);
+					}
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -142,7 +190,8 @@ public class AccountRepository {
 		};
 
 		DatabaseUtils.executeWithTransaction(task, dbHelper);
-	}
+	}*/
+
 
 	public void setActiveAccount(String mcid) {
 		AvisacitasSQLiteOpenHelper.DatabaseTask<Void> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {

@@ -129,8 +129,19 @@ public class AvisacitasSQLiteOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onOpen(SQLiteDatabase db) {
 		super.onOpen(db);
-		// Aquí puedes realizar cualquier configuración adicional cada vez que se abre la base de datos
+//
+//		// Habilitar el modo WAL usando rawQuery
+//		try (Cursor cursor = db.rawQuery("PRAGMA journal_mode=WAL", null)) {
+//			if (cursor.moveToFirst()) {
+//				String journalMode = cursor.getString(0);
+//				LogHelper.addLogInfo("Journal mode: " + journalMode); // Esto debería mostrar "wal"
+//			}
+//		} catch (Exception e) {
+//			LogHelper.addLogError(e);
+//		}
 	}
+
+
 
 
 	@FunctionalInterface

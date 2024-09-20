@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.gvs.avisacitas.model.calendar.CalendarEvent;
 import com.gvs.avisacitas.model.sqlite.EventsRepository;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import java.util.List;
 public class SharedViewModel extends ViewModel {
 
 	// MutableLiveData para la lista de eventos
-	private final MutableLiveData<List<String>> eventsList = new MutableLiveData<>();
+	private final MutableLiveData<List<CalendarEvent>> eventsList = new MutableLiveData<>();
 	private Context context;
 	private final EventsRepository eventsRepository;
 
@@ -32,18 +33,21 @@ public class SharedViewModel extends ViewModel {
 
 	// Método para obtener LiveData de la lista de eventos
 
-	public LiveData<List<String>> getEventsList() {
+	public LiveData<List<CalendarEvent>> getEventsList() {
 		return eventsRepository.getEventsList();
+	}
+	public LiveData<List<String>> getEventsTitlesList() {
+		return eventsRepository.getEventsTitlesList();
 	}
 
 	// Método para actualizar la lista de eventos
-	public void updateEvents(List<String> newEvents) {
+	public void updateEvents(List<CalendarEvent> newEvents) {
 		eventsList.setValue(newEvents);
 	}
 
 	// Método para agregar un evento
-	public void addEvent(String event) {
-		List<String> currentEvents = eventsList.getValue();
+	public void addEvent(CalendarEvent event) {
+		List<CalendarEvent> currentEvents = eventsList.getValue();
 		if (currentEvents != null) {
 			currentEvents.add(event);
 			eventsList.setValue(currentEvents);

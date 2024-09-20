@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gvs.avisacitas.R;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class EventsQueueAdapter extends RecyclerView.Adapter<EventsQueueAdapter.EventViewHolder> {
 
-	private List<CalendarEvent> events;
+	private final List<CalendarEvent> events;
 
 	public EventsQueueAdapter(List<CalendarEvent> events) {
 		this.events = events;
@@ -47,7 +48,7 @@ public class EventsQueueAdapter extends RecyclerView.Adapter<EventsQueueAdapter.
 			holder.eventReason.setText(getEventReminderReason(event));
 			holder.eventTime.setText(formatDate(event.getEventStartEpoch()));
 
-			holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.default_disabled_color));
+			holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.default_disabled_color));
 
 			// Si es el tercer evento, aumentar el tamaño del texto
 			if (position == 2) {
@@ -57,7 +58,7 @@ public class EventsQueueAdapter extends RecyclerView.Adapter<EventsQueueAdapter.
 				holder.eventPhone.setTextSize(24);
 				holder.eventTime.setTextSize(24);
 
-				holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.white));
+				holder.itemView.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.white));
 
 				// Cambiar margen superior de eventName
 				ViewGroup.MarginLayoutParams paramsName = (ViewGroup.MarginLayoutParams) holder.eventName.getLayoutParams();

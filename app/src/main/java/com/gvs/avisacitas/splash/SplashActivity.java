@@ -10,10 +10,15 @@ import android.widget.TextView;
 
 import com.gvs.avisacitas.R;
 import com.gvs.avisacitas.login.ui.login.LoginActivity;
+import com.gvs.avisacitas.main.MainActivity;
 import com.gvs.avisacitas.model.accounts.Account;
 import com.gvs.avisacitas.model.sqlite.AccountRepository;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
 import com.gvs.avisacitas.model.sqlite.GeneralDataRepository;
+import com.gvs.avisacitas.utils.error.LogHelper;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -38,7 +43,6 @@ public class SplashActivity extends AppCompatActivity {
 	};
 
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -48,15 +52,14 @@ public class SplashActivity extends AppCompatActivity {
 		progressText = findViewById(R.id.progress_text);
 		loadingFileText = findViewById(R.id.loading_file_text);
 
-		AvisacitasSQLiteOpenHelper avisacitasSQLiteOpenHelper = new AvisacitasSQLiteOpenHelper(this);
-		GeneralDataRepository generalDataRepository = new GeneralDataRepository(this);
+		//GeneralDataRepository generalDataRepository = new GeneralDataRepository(this);
 		AccountRepository accountRepository = new AccountRepository(this);
 
 		// Simular la carga de archivos
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for (int i = 0; i <  filesToLoad.length; i++) {
+				for (int i = 0; i < filesToLoad.length; i++) {
 					final String currentFile = filesToLoad[i]; // Obtener el archivo actual
 
 					// Simular el tiempo de carga de cada archivo
@@ -77,27 +80,62 @@ public class SplashActivity extends AppCompatActivity {
 							loadingFileText.setText(String.format("%s%s", getString(R.string.loading), currentFile));
 							// Actualizar el progreso
 							progressBar.setProgress(progressStatus);
-							progressText.setText(getString(R.string.loading)  + progressStatus + "%");
+							progressText.setText(getString(R.string.loading) + progressStatus + "%");
 						}
 					});
 				}
 
 
+				//generalDataRepository.updatePanicBtn(true);
 
-				generalDataRepository.updatePanicBtn(true);
-
+				try {
 					Account hasAccount = accountRepository.getActiveAccount();
-					if (hasAccount ==null) {
+
+					if (hasAccount != null) {
+
+						//CalendarHelper.insertOrUpdateAllCalendarEvents(getApplicationContext());
+
+						// Una vez que todos los archivos han sido cargados, iniciar la actividad principal
+						Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+						startActivity(intent);
+						finish(); // Finalizar SplashActivity
+					}
+
+					if (hasAccount == null) {
+
+						// Insertar una cuenta falsa
+						Account fakeAccount = new Account();
+						fakeAccount.setPk_mcid("fake_mcid_123");
+						fakeAccount.setName("Fake User");
+						fakeAccount.setEmail("fakeuser@example.com");
+						fakeAccount.setPhone("638397366");
+						fakeAccount.setWaToken("fake_token");
+						fakeAccount.setConnect("true");
+						fakeAccount.setEpochUTCAdded(System.currentTimeMillis() / 1000L);
+						fakeAccount.setActive("true");
+						fakeAccount.setCompanyName("Fake Company");
+						fakeAccount.setCustomPostMsg("Custom Fake PostMsg");
+
+						// Convertir las cuentas a JSON
+						JSONObject fakeAccountJson = fakeAccount.toJsonObject();
+
+//						// Crear un JSONArray para almacenar múltiples cuentas
+//						JSONArray accountsArray = new JSONArray();
+//						accountsArray.put(fakeAccountJson);
+
+						// Insertar las cuentas en la base de datos
+						accountRepository.dbInsertAccountBlocking(fakeAccountJson);
+
+						//Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
+						Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+						startActivity(intent);
+						finish(); // Finalizar SplashActivity
 
 					}
 
-					//CalendarHelper.insertOrUpdateAllCalendarEvents(getApplicationContext());
-
-
-				// Una vez que todos los archivos han sido cargados, iniciar la actividad principal
-				Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
-				startActivity(intent);
-				finish(); // Finalizar SplashActivity
+				} catch (Exception ex) {
+					LogHelper.addLogError(ex);
+				}
 			}
 		}).start();
 	}

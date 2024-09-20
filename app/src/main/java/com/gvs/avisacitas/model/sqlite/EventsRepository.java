@@ -28,7 +28,7 @@ public class EventsRepository {
 		dbHelper = AvisacitasSQLiteOpenHelper.getInstance(context);
 	}
 
-	public LiveData<List<String>> getEventsList() {
+	public LiveData<List<String>> getEventsTitlesList() {
 		MutableLiveData<List<String>> eventsListLiveData = new MutableLiveData<>();
 
 		// Suponiendo que getNextEventData() devuelve un objeto CalendarEvent
@@ -45,6 +45,22 @@ public class EventsRepository {
 		return eventsListLiveData;
 	}
 
+	public LiveData<List<CalendarEvent>> getEventsList() {
+		MutableLiveData<List<CalendarEvent>> eventsListLiveData = new MutableLiveData<>();
+
+		// Suponiendo que getNextEventData() devuelve un objeto CalendarEvent
+		CalendarEvent nextEvent = getNextEventData();
+
+		if (nextEvent != null) {
+			List<CalendarEvent> eventsList = new ArrayList<>();
+			eventsList.add(nextEvent);
+			eventsListLiveData.setValue(eventsList);
+		} else {
+			eventsListLiveData.setValue(new ArrayList<>()); // Lista vacía si no hay eventos
+		}
+
+		return eventsListLiveData;
+	}
 
 	public void updateEvent(final long id, String columName, final long epochDateSend) {
 		AvisacitasSQLiteOpenHelper.DatabaseTask<Integer> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
