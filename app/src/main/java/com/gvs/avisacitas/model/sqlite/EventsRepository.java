@@ -48,6 +48,8 @@ public class EventsRepository {
 	public LiveData<List<CalendarEvent>> getEventsList() {
 		MutableLiveData<List<CalendarEvent>> eventsListLiveData = new MutableLiveData<>();
 
+		MutableLiveData<List<CalendarEvent>> queueEventsListLiveData = new MutableLiveData<>();
+		List<CalendarEvent> queueEventsList = null;
 		// Suponiendo que getNextEventData() devuelve un objeto CalendarEvent
 		CalendarEvent nextEvent = getNextEventData();
 
@@ -55,11 +57,16 @@ public class EventsRepository {
 			List<CalendarEvent> eventsList = new ArrayList<>();
 			eventsList.add(nextEvent);
 			eventsListLiveData.setValue(eventsList);
+
+			queueEventsList = getQueueEvents();
+
+			queueEventsListLiveData.setValue(queueEventsList);
+
 		} else {
 			eventsListLiveData.setValue(new ArrayList<>()); // Lista vacía si no hay eventos
 		}
 
-		return eventsListLiveData;
+		return queueEventsListLiveData;
 	}
 
 	public void updateEvent(final long id, String columName, final long epochDateSend) {
@@ -94,17 +101,17 @@ public class EventsRepository {
 			@Override
 			public CalendarEvent execute(SQLiteDatabase db) {
 
-				CalendarEvent eventWCB = null;
+				CalendarEvent calendarEvent = null;
 				String query =
 						"SELECT * " +
-								"FROM eventwcb " +
+								"FROM calendarevent " +
 								"WHERE eventStartEpoch > strftime('%s', 'now') " +
 								"ORDER BY eventStartEpoch ASC " +
 								"LIMIT 1";
 
 				try {
 
-					eventWCB = DatabaseUtils.executeReadOneRow(
+					calendarEvent = DatabaseUtils.executeReadOneRow(
 							db,
 							query,
 							new String[]{},
@@ -115,7 +122,7 @@ public class EventsRepository {
 					LogHelper.addLogError("[AvisacitasSQLiteOpenHelper] getNextEventData " + ex);
 
 				}
-				return eventWCB;
+				return calendarEvent;
 			}
 		};
 
@@ -131,12 +138,12 @@ public class EventsRepository {
 		AvisacitasSQLiteOpenHelper.DatabaseTask<CalendarEvent> task = new AvisacitasSQLiteOpenHelper.DatabaseTask<>() {
 			@Override
 			public CalendarEvent execute(SQLiteDatabase db) {
-				CalendarEvent eventWCB = null;
+				CalendarEvent calendarEvent = null;
 				long currentTime = System.currentTimeMillis();
 				String query =
 
 						"SELECT * " +
-								"FROM eventwcb " +
+								"FROM calendarevent " +
 								"WHERE i_createdSentDateEpoch = 0 " +
 								"AND eventStartEpoch > ? " +
 								"AND (targetPhone IS NOT NULL AND targetPhone <> '' AND targetPhone <> '0') " +
@@ -144,7 +151,7 @@ public class EventsRepository {
 								"LIMIT 1";
 
 //					"SELECT * " +
-//					"FROM eventwcb " +
+//					"FROM calendarevent " +
 //					"WHERE " +
 //					"(i_createdSentDateEpoch = 0 OR i_60SentDateEpoch = 0 OR i_1440SentDateEpoch = 0 OR i_2880SentDateEpoch = 0) " +
 //					"AND eventStartEpoch > ? " +
@@ -160,7 +167,7 @@ public class EventsRepository {
 //					"LIMIT 1";
 
 				try {
-					eventWCB = DatabaseUtils.executeReadOneRow(
+					calendarEvent = DatabaseUtils.executeReadOneRow(
 							db,
 							query,
 							new String[]{String.valueOf(currentTime)}, // Pass the current time as a parameter
@@ -169,8 +176,8 @@ public class EventsRepository {
 				} catch (Exception ex) {
 					LogHelper.addLogError("[AvisacitasSQLiteOpenHelper] getNextEventData " + ex);
 				}
-				//LogHelper.addLogInfo("epoch: " + eventWCB.getEventStartEpoch());
-				return eventWCB;
+				//LogHelper.addLogInfo("epoch: " + calendarEvent.getEventStartEpoch());
+				return calendarEvent;
 			}
 		};
 
@@ -189,14 +196,14 @@ public class EventsRepository {
 				try {
 					// Obtener el próximo evento
 					String nextEventQuery =
-//							"SELECT * FROM eventwcb " +
+//							"SELECT * FROM calendarevent " +
 //									"WHERE i_createdSentDateEpoch = 0 " +
 //									"AND eventStartEpoch > ? " +
 //									"AND (targetPhone IS NOT NULL AND targetPhone <> '' AND targetPhone <> '0') " +
 //									"ORDER BY eventStartEpoch ASC " +
 //									"LIMIT 1";
 							"SELECT * " +
-									"FROM eventwcb " +
+									"FROM calendarevent " +
 									"WHERE " +
 									"(i_createdSentDateEpoch = 0 OR i_60SentDateEpoch = 0 OR i_1440SentDateEpoch = 0 OR i_2880SentDateEpoch = 0) " +
 									"AND eventStartEpoch > ? " +
@@ -223,7 +230,7 @@ public class EventsRepository {
 
 					// Obtener los dos eventos anteriores al próximo evento (orden descendente)
 					String previousEventsQuery =
-							"SELECT * FROM eventwcb " +
+							"SELECT * FROM calendarevent " +
 									"WHERE eventStartEpoch < ? " +
 									"AND (targetPhone IS NOT NULL AND targetPhone <> '' AND targetPhone <> '0') " +
 									"ORDER BY eventStartEpoch DESC " +
@@ -233,7 +240,7 @@ public class EventsRepository {
 
 					// Obtener los dos eventos siguientes al próximo evento (orden ascendente)
 					String nextEventsQuery =
-							"SELECT * FROM eventwcb " +
+							"SELECT * FROM calendarevent " +
 									"WHERE eventStartEpoch > ? " +
 									"AND (targetPhone IS NOT NULL AND targetPhone <> '' AND targetPhone <> '0') " +
 									"ORDER BY eventStartEpoch ASC " +

@@ -12,6 +12,7 @@ import com.gvs.avisacitas.R;
 import com.gvs.avisacitas.login.ui.login.LoginActivity;
 import com.gvs.avisacitas.main.MainActivity;
 import com.gvs.avisacitas.model.accounts.Account;
+import com.gvs.avisacitas.model.calendar.CalendarHelper;
 import com.gvs.avisacitas.model.sqlite.AccountRepository;
 import com.gvs.avisacitas.model.sqlite.AvisacitasSQLiteOpenHelper;
 import com.gvs.avisacitas.model.sqlite.GeneralDataRepository;
@@ -107,7 +108,7 @@ public class SplashActivity extends AppCompatActivity {
 						Account fakeAccount = new Account();
 						fakeAccount.setPk_mcid("fake_mcid_123");
 						fakeAccount.setName("Fake User");
-						fakeAccount.setEmail("fakeuser@example.com");
+						fakeAccount.setEmail("gonzalowachatbot@gmail.com");
 						fakeAccount.setPhone("638397366");
 						fakeAccount.setWaToken("fake_token");
 						fakeAccount.setConnect("true");
@@ -118,10 +119,6 @@ public class SplashActivity extends AppCompatActivity {
 
 						// Convertir las cuentas a JSON
 						JSONObject fakeAccountJson = fakeAccount.toJsonObject();
-
-//						// Crear un JSONArray para almacenar múltiples cuentas
-//						JSONArray accountsArray = new JSONArray();
-//						accountsArray.put(fakeAccountJson);
 
 						// Insertar las cuentas en la base de datos
 						accountRepository.dbInsertAccountBlocking(fakeAccountJson);

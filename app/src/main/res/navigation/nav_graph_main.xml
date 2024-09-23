@@ -2,23 +2,23 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@+id/nav_home">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/nav_home"
         android:name="com.gvs.avisacitas.main.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/events_queue"
+        android:id="@+id/nav_events_queue"
         android:name="com.gvs.avisacitas.main.ui.eventsQueue.EventsQueueFragment"
         android:label="@string/title_dashboard"
         tools:layout="@layout/fragment_events_queue" />
 
     <fragment
-        android:id="@+id/settings"
+        android:id="@+id/nav_settings"
         android:name="com.gvs.avisacitas.main.ui.settings.SettingsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_settings" />

@@ -15,7 +15,7 @@ public class Account implements Serializable {
 	private String phone;
 	private String pk_mcid;
 	private String email;
-	private int lastSyncStatus = GlobalReferences.ACCOUNTWCB_STATUS_NEVERSYNCED;
+	private int lastSyncStatus = GlobalReferences.ACCOUNT_STATUS_NEVERSYNCED;
 	private String isConnect;
 	private long epochUTCLastSync = (long)0;
 	private long epochUTCAdded = (long)0;
@@ -185,7 +185,7 @@ public class Account implements Serializable {
 	public void setConnect(String connect) {isConnect = connect;}
 	public void setEpochUTCAdded(long epochUTCAdded) {this.epochUTCAdded = epochUTCAdded;}
 	public void setEpochUTCLastSync(long epochUTC){
-		this.lastSyncStatus = GlobalReferences.ACCOUNTWCB_STATUS_SYNCFINISHED;
+		this.lastSyncStatus = GlobalReferences.ACCOUNT_STATUS_SYNCFINISHED;
 		this.epochUTCLastSync = epochUTC;
 	}
 	public void setLastSyncStatus(int lastSyncStatus) {this.lastSyncStatus = lastSyncStatus;}

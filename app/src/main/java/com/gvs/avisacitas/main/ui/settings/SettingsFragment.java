@@ -29,8 +29,8 @@ public class SettingsFragment extends Fragment {
 		// Obtener el mismo ViewModel compartido con la Activity
 		sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-		final TextView textView = binding.textNotifications;
-		settingsViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+		// Pausar la reproducción al entrar en configuraciones
+		sharedViewModel.stopPlayback();
 
 		return root;
 	}

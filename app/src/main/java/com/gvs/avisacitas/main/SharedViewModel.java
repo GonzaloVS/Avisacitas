@@ -15,43 +15,55 @@ import java.util.List;
 
 public class SharedViewModel extends ViewModel {
 
-	// MutableLiveData para la lista de eventos
 	private final MutableLiveData<List<CalendarEvent>> eventsList = new MutableLiveData<>();
-	private Context context;
 	private final EventsRepository eventsRepository;
+	private final MutableLiveData<Boolean> isPlaying = new MutableLiveData<>(false);
 
+
+	// Constructor que acepta Application
 	public SharedViewModel(Application application) {
 		super();
-		eventsRepository = new EventsRepository(application);
-	}
-
-	public SharedViewModel(EventsRepository eventsRepository) {
-		this.eventsRepository = eventsRepository;
-		// Inicializar con una lista vacía
+		this.eventsRepository = new EventsRepository(application);
+		// Inicializar con una lista vacía si es necesario
 		eventsList.setValue(new ArrayList<>());
 	}
 
 	// Método para obtener LiveData de la lista de eventos
-
 	public LiveData<List<CalendarEvent>> getEventsList() {
 		return eventsRepository.getEventsList();
 	}
+
 	public LiveData<List<String>> getEventsTitlesList() {
 		return eventsRepository.getEventsTitlesList();
 	}
 
-	// Método para actualizar la lista de eventos
+	// Otros métodos para manejar eventos
 	public void updateEvents(List<CalendarEvent> newEvents) {
 		eventsList.setValue(newEvents);
 	}
 
-	// Método para agregar un evento
 	public void addEvent(CalendarEvent event) {
 		List<CalendarEvent> currentEvents = eventsList.getValue();
 		if (currentEvents != null) {
 			currentEvents.add(event);
 			eventsList.setValue(currentEvents);
 		}
+	}
+
+
+	public LiveData<Boolean> getIsPlaying() {
+		return isPlaying;
+	}
+
+	public void togglePlayPause() {
+		Boolean currentState = isPlaying.getValue();
+		if (currentState != null) {
+			isPlaying.setValue(!currentState);
+		}
+	}
+
+	public void stopPlayback() {
+		isPlaying.setValue(false);
 	}
 }
 

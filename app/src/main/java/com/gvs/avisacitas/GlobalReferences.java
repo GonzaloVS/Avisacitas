@@ -28,10 +28,10 @@ public class GlobalReferences {
     public static final boolean NOTIFICATION_PERSISTENT = true;
 
 
-    public static final int ACCOUNTWCB_STATUS_NEVERSYNCED = 0;
-    public static final int ACCOUNTWCB_STATUS_SYNCCANCELED = 1;
-    public static final int ACCOUNTWCB_STATUS_SYNCFINISHED = 2;
-    public static final int ACCOUNTWCB_STATUS_SYNCERROR = -1;
+    public static final int ACCOUNT_STATUS_NEVERSYNCED = 0;
+    public static final int ACCOUNT_STATUS_SYNCCANCELED = 1;
+    public static final int ACCOUNT_STATUS_SYNCFINISHED = 2;
+    public static final int ACCOUNT_STATUS_SYNCERROR = -1;
 
 
 

@@ -199,7 +199,7 @@ public class AccountRepository {
 			public Void execute(SQLiteDatabase db) {
 				try {
 					// Crear la sentencia SQL para actualizar el estado activo
-					String sql = "UPDATE accountwcb SET isActive = (CASE WHEN pk_mcid = ? THEN 1 ELSE 0 END)";
+					String sql = "UPDATE account SET isActive = (CASE WHEN pk_mcid = ? THEN 1 ELSE 0 END)";
 					SQLiteStatement statement = db.compileStatement(sql);
 
 					// Enlazar el parámetro mcid a la sentencia
@@ -226,7 +226,7 @@ public class AccountRepository {
 
 
 				List<String> emails = new ArrayList<>();
-				String selectQuery = "SELECT email FROM accountwcb";
+				String selectQuery = "SELECT email FROM account";
 
 				try (Cursor cursor = db.rawQuery(selectQuery, null)) {
 					while (cursor.moveToNext()) {
@@ -301,7 +301,7 @@ public class AccountRepository {
 					values.put("companyName", companyName);
 
 					// Actualizar el registro donde isActive = 1 (es decir, la cuenta activa)
-					db.update("accountwcb", values, "isActive = ?", new String[]{"true"});
+					db.update("account", values, "isActive = ?", new String[]{"true"});
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -318,7 +318,7 @@ public class AccountRepository {
 			@Override
 			public String execute(SQLiteDatabase db) {
 				String companyName = null;
-				String query = "SELECT companyName FROM accountwcb WHERE isActive = 'true' LIMIT 1";
+				String query = "SELECT companyName FROM account WHERE isActive = 'true' LIMIT 1";
 
 				try (Cursor cursor = db.rawQuery(query, null)) {
 					if (cursor != null && cursor.moveToFirst()) {
@@ -346,7 +346,7 @@ public class AccountRepository {
 					values.put("customOncreateMsg", messageText);
 
 					// Actualizar el registro donde isActive = 1 (es decir, la cuenta activa)
-					db.update("accountwcb", values, "isActive = ?", new String[]{"true"});
+					db.update("account", values, "isActive = ?", new String[]{"true"});
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);
@@ -365,7 +365,7 @@ public class AccountRepository {
 			@Override
 			public String execute(SQLiteDatabase db) {
 				String customOncreateMsg = null;
-				String query = "SELECT customOncreateMsg FROM accountwcb WHERE isActive = 'true' LIMIT 1";
+				String query = "SELECT customOncreateMsg FROM account WHERE isActive = 'true' LIMIT 1";
 
 				try (Cursor cursor = db.rawQuery(query, null)) {
 					if (cursor != null && cursor.moveToFirst()) {
@@ -387,7 +387,7 @@ public class AccountRepository {
 			public String execute(SQLiteDatabase db) {
 				try {
 
-					return DatabaseUtils.executeReadOneValue(db, "SELECT customOncreateMsg FROM accountswcb WHERE pk_mcid = ?", new String[]{pkMcid}, "pk_mcid").toString();
+					return DatabaseUtils.executeReadOneValue(db, "SELECT customOncreateMsg FROM account WHERE pk_mcid = ?", new String[]{pkMcid}, "pk_mcid").toString();
 
 				} catch (Exception ex) {
 					LogHelper.addLogError(ex);

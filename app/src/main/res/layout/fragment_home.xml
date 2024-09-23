@@ -104,7 +104,7 @@
                 android:layout_marginTop="@dimen/_50sdp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_error"
-                app:tint="@color/warning"/>
+                app:tint="@color/warning" />
 
             <TextView
                 android:id="@+id/textAccesibilityStatus"
