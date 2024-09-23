@@ -1,5 +1,6 @@
 package com.gvs.avisacitas.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.gvs.avisacitas.R;
+import com.gvs.avisacitas.autoSend.SenderWorker;
 import com.gvs.avisacitas.databinding.ActivityMainBinding;
 import com.gvs.avisacitas.model.calendar.CalendarHelper;
 import com.gvs.avisacitas.utils.error.LogHelper;
@@ -100,6 +102,11 @@ public class MainActivity extends AppCompatActivity {
 			playPauseButton.setImageResource(
 					isPowerOn ? R.drawable.ic_pause_black_24dp : R.drawable.ic_play_arrow_black_24dp
 			);
+
+			if (isPowerOn) {
+				Intent intent = new Intent(this, SenderWorker.class);
+				startService(intent);
+			}
 
 		} catch (Exception ex) {
 			LogHelper.addLogError(ex);
